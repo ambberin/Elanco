@@ -1,0 +1,91 @@
+/* styles.css */
+
+/* Increase font size and padding for better readability */
+select {
+    font-size: 16px; /* Adjust font size as needed */
+    padding: 10px; /* Adjust padding as needed */
+    width: 300px; /* Adjust width as needed */
+    border: 1px solid #ccc; /* Add border for better visibility */
+    border-radius: 5px; /* Add border-radius for rounded corners */
+}
+
+/* Increase height of dropdown arrow for better visibility */
+select::-ms-expand {
+    display: none;
+}
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>'); /* Adjust the URL of the image as needed */
+    background-position: right 10px top 50%;
+    background-repeat: no-repeat;
+    background-size: 24px;
+}
+
+/* Add hover effect */
+select:hover {
+    border-color: #999; /* Change border color on hover */
+}
+
+/* Add focus effect */
+select:focus {
+    border-color: #333; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    width: 80%; /* Adjust width as needed */
+    max-width: 1200px; /* Adjust max-width as needed */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+#apiData table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#apiData th, #apiData td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+#apiData th {
+    background-color: #c8b44f;
+    text-align: left;
+}
+
+#apiData td {
+    vertical-align: top;
+}
+
+#apiData2 table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#apiData2 th, #apiData2 td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+#apiData2 th {
+    background-color: #e46a6a;
+    text-align: left;
+}
+
+#apiData2 td {
+    vertical-align: top;
+}

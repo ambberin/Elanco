@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Elanco Task - Services</title>
+    <link rel="stylesheet" href="styles.css"> 
+</head>
+<body>
+    <div class="container">
+        <h1>Elanco</h1>
+        <select id="Dropdown">
+            <option value="applications">Elanco Applications</option>
+            <option value="resources">Elanco Resources</option>
+        </select> 
+        <select id="serviceDropdown"></select> <!-- Dropdown select element -->
+        <select id="resourceDropdown" style="display: none;"></select>
+        <div id="apiData" class="data-container"></div> 
+        <div id="apiData2" class="data-container"></div>
+    </div>
+
+    <script>
+        const serviceDropdown = document.getElementById('serviceDropdown');
+        const resourceDropdown = document.getElementById('resourceDropdown');
+        const apiData = document.getElementById('apiData');
+        const apiData2 = document.getElementById('apiData2');
+
+        const Dropdown = document.getElementById('Dropdown');
+        Dropdown.addEventListener('change', function() {
+            const selectedOption = this.value;
+            if (selectedOption === 'applications') {
+                serviceDropdown.style.display = 'block';
+                resourceDropdown.style.display = 'none';
+                apiData.style.display = 'block';
+                apiData2.style.display = 'none';
+            } else if (selectedOption === 'resources') {
+                serviceDropdown.style.display = 'none';
+                resourceDropdown.style.display = 'block';
+                apiData.style.display = 'none';
+                apiData2.style.display = 'block';
+            }
+        });
+
+        // Fetch data from the API and populate the applications dropdown
+        fetch('https://engineering-task.elancoapps.com/api/applications')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item; 
+                    option.textContent = item; 
+                    serviceDropdown.appendChild(option); 
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                apiData.innerText = 'Error fetching data. Please try again later.';
+            });
+
+        // Fetch data from the API and populate the resources dropdown
+        fetch('https://engineering-task.elancoapps.com/api/resources')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item; 
+                    option.textContent = item; 
+                    resourceDropdown.appendChild(option); 
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                apiData2.innerText = 'Error fetching data. Please try again later.';
+            });
+
+        // Fetch additional information when application dropdown selection changes
+        serviceDropdown.addEventListener('change', function() {
+            const selectedService = this.value;
+            fetch(`https://engineering-task.elancoapps.com/api/applications/${selectedService}`)
+                .then(response => response.json())
+                .then(data => {
+                    const formattedData = formatData(data);
+                    apiData.innerHTML = formattedData;
+                })
+                .catch(error => {
+                    console.error('Error fetching additional data:', error);
+                    apiData.innerText = 'Error fetching additional data. Please try again later.';
+                });
+        });
+
+        // Fetch additional information when resource dropdown selection changes
+        resourceDropdown.addEventListener('change', function() {
+            const selectedResource = this.value;
+            fetch(`https://engineering-task.elancoapps.com/api/resources/${selectedResource}`)
+                .then(response => response.json())
+                .then(data => {
+                    const formattedData = formatData(data);
+                    apiData2.innerHTML = formattedData;
+                })
+                .catch(error => {
+                    console.error('Error fetching additional data:', error);
+                    apiData2.innerText = 'Error fetching additional data. Please try again later.';
+                });
+        });
+
+        function formatData(data) {
+            let tableHTML = `<h2>Information</h2><table>`;
+            tableHTML += '<tr><th>Property</th><th>Value</th></tr>';
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    let value = data[key];
+                    if (key === 'Tags' && typeof value === 'object') {
+                        value = Object.entries(value).map(([prop, val]) => `${prop}: ${val}`).join('<br>');
+                    } else if (typeof value === 'object') {
+                        value = JSON.stringify(value);
+                    }
+                    tableHTML += `<tr><td>${key}</td><td>${value}</td></tr>`;
+                }
+            }
+            tableHTML += '</table>';
+            return tableHTML;
+        }
+    </script>    
+</body>
+</html>
