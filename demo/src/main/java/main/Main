@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Highest Cost</title>
+    <link rel="stylesheet" href="button.css">
+</head>
+<body>
+    <h1>Highest Cost:</h1>
+    <div id="highestCost"></div>
+    
+    <!-- Add the Common Trends button -->
+    <button id="commonTrendsButton">Common Trends</button>
+
+    <script>
+        // Function to fetch the highest cost
+        function fetchHighestCost() {
+            // Make AJAX request to backend API endpoint
+            fetch('http://localhost:8000/highest-cost') // Assuming your Java backend is running on port 8000
+                .then(response => response.text())
+                .then(highestCost => {
+                    // Update the HTML content with the highest cost value
+                    document.getElementById('highestCost').innerText = highestCost;
+                })
+                .catch(error => {
+                    console.error('Error fetching highest cost:', error);
+                });
+        }
+
+        // Add click event listener to the Common Trends button
+        document.getElementById('commonTrendsButton').addEventListener('click', fetchHighestCost);
+    </script>
+</body>
+</html>
