@@ -1,3 +1,33 @@
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class MyController {
+
+    @CrossOrigin(origins = "http://localhost:3000") // Allow requests from this origin
+    @GetMapping("/highest-cost")
+    public String getHighestCost() {
+        // Your logic to fetch and return the highest cost
+        return "100"; // Dummy response for demonstration
+    }
+}
+const express = require('express');
+const cors = require('cors');
+
+const app = express();
+
+// Use CORS middleware
+app.use(cors());
+
+// Your other routes and middleware
+
+// Start the server
+const port = process.env.PORT || 8000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,22 +40,36 @@
     <h1>Highest Cost:</h1>
     <div id="highestCost"></div>
     
-    <!-- Add the Common Trends button -->
-    <button id="commonTrendsButton">Common Trends</button>
+    <!-- Add the Common Trends button with customized text -->
+    <button id="commonTrendsButton">Get Highest Cost</button>
 
     <script>
         // Function to fetch the highest cost
         function fetchHighestCost() {
-            // Make AJAX request to backend API endpoint
-            fetch('http://localhost:8000/highest-cost') // Assuming your Java backend is running on port 8000
-                .then(response => response.text())
-                .then(highestCost => {
-                    // Update the HTML content with the highest cost value
-                    document.getElementById('highestCost').innerText = highestCost;
-                })
-                .catch(error => {
-                    console.error('Error fetching highest cost:', error);
-                });
+            // Make AJAX request to backend API endpoints
+            Promise.all([
+                fetch('https://engineering-task.elancoapps.com/api/applications').then(response => response.json()),
+                fetch('https://engineering-task.elancoapps.com/api/resources').then(response => response.json())
+            ]).then(([applicationsData, resourcesData]) => {
+                // Extract costs from application data
+                const applicationCosts = applicationsData.map(app => app.Cost || 0);
+
+                // Extract costs from resource data
+                const resourceCosts = resourcesData.map(res => res.Cost || 0);
+
+                // Combine all costs
+                const allCosts = [...applicationCosts, ...resourceCosts];
+
+                // Find the highest cost
+                const highestCost = Math.max(...allCosts);
+
+                // Update the HTML content with the highest cost value
+                document.getElementById('highestCost').innerText = `Highest Cost: $${highestCost.toFixed(2)}`; // Format the cost with two decimal places
+            }).catch(error => {
+                console.error('Error fetching data:', error);
+                // Display an error message to the user
+                document.getElementById('highestCost').innerText = 'Error fetching highest cost. Please try again later.';
+            });
         }
 
         // Add click event listener to the Common Trends button
@@ -33,3 +77,4 @@
     </script>
 </body>
 </html>
+
